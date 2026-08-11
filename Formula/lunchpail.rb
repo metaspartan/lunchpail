@@ -4,7 +4,6 @@ class Lunchpail < Formula
   license "Apache-2.0"
   head "https://github.com/metaspartan/lunchpail.git", branch: "main"
 
-  depends_on xcode: ["16.0", :build]
   depends_on arch: :arm64
   depends_on macos: :sequoia
 
