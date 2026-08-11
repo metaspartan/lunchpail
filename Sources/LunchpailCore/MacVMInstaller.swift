@@ -1,5 +1,5 @@
 import Foundation
-import Virtualization
+@preconcurrency import Virtualization
 
 public struct MacVMInstallRequest: Sendable {
   public let name: String
