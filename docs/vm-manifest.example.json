@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "name": "tahoe-metal-worker",
+  "cpuCount": 8,
+  "memoryBytes": 17179869184,
+  "diskPath": "disk.asif",
+  "auxiliaryStoragePath": "auxiliary-storage",
+  "hardwareModelBase64": "REPLACE_WITH_VZMacHardwareModel_DATA",
+  "machineIdentifierBase64": "REPLACE_WITH_VZMacMachineIdentifier_DATA",
+  "macAddress": "02:00:00:00:00:01",
+  "display": {
+    "widthPixels": 1920,
+    "heightPixels": 1200,
+    "pixelsPerInch": 144
+  },
+  "sharedDirectoryPath": null,
+  "metalProfileID": "stock"
+}

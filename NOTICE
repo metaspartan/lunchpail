@@ -1,0 +1,6 @@
+Lunchpail
+Copyright 2026 Lunchpail contributors
+
+The process-scoped Metal capability shim is adapted from Cua AI's Lume Metal
+capability shim and is distributed under the MIT License. See
+Guest/MetalShim/LICENSE and THIRD_PARTY_NOTICES.md.

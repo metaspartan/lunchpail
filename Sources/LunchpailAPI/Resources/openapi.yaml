@@ -1,0 +1,628 @@
+openapi: 3.1.0
+info:
+  title: Lunchpail API
+  version: v1
+  description: Local control plane for Apple silicon virtual machines and process-scoped Metal profiles.
+  license:
+    name: Apache License 2.0
+    identifier: Apache-2.0
+servers:
+  - url: http://127.0.0.1:7777
+security:
+  - bearerAuth: []
+paths:
+  /health:
+    get:
+      summary: Check service health
+      operationId: health
+      security: []
+      responses:
+        "200":
+          description: Service health
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+  /openapi.yaml:
+    get:
+      summary: Read the OpenAPI document
+      operationId: openAPIDocument
+      security: []
+      responses:
+        "200":
+          description: This OpenAPI document
+          content:
+            application/yaml:
+              schema:
+                type: string
+        "4XX":
+          $ref: "#/components/responses/Error"
+  /v1/host:
+    get:
+      summary: Inspect host capabilities
+      operationId: inspectHost
+      responses:
+        "200":
+          description: Host capability report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HostEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        default:
+          $ref: "#/components/responses/Error"
+  /v1/metal/profiles:
+    get:
+      summary: List Metal capability profiles
+      operationId: listMetalProfiles
+      responses:
+        "200":
+          description: Available Metal profiles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetalProfilesEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        default:
+          $ref: "#/components/responses/Error"
+  /v1/metal/probe:
+    post:
+      summary: Probe a Metal capability profile
+      operationId: probeMetalProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MetalProbeRequest"
+      responses:
+        "200":
+          description: Stock and profiled capability comparison
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetalProbeEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        default:
+          $ref: "#/components/responses/Error"
+  /v1/metal/host/enable:
+    post:
+      summary: Enable the private Metal host bridge
+      operationId: enableMetalHostBridge
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MetalHostEnableRequest"
+      responses:
+        "200":
+          description: Previous preference state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HostPreferenceEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        default:
+          $ref: "#/components/responses/Error"
+  /v1/metal/host/restore:
+    post:
+      summary: Restore the prior Metal host preference
+      operationId: restoreMetalHostBridge
+      responses:
+        "200":
+          description: Restored preference state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HostPreferenceEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        default:
+          $ref: "#/components/responses/Error"
+  /v1/vms:
+    get:
+      summary: List virtual machines
+      operationId: listVMs
+      responses:
+        "200":
+          description: Registered and discovered VMs with runtime states
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VMListEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        default:
+          $ref: "#/components/responses/Error"
+  /v1/vms/register:
+    post:
+      summary: Register a Lunchpail manifest
+      operationId: registerVM
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterVMRequest"
+      responses:
+        "200":
+          description: Registered VM
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VMInventoryEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        default:
+          $ref: "#/components/responses/Error"
+  /v1/vms/import-lume:
+    post:
+      summary: Import a Lume macOS VM
+      operationId: importLumeVM
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImportLumeRequest"
+      responses:
+        "200":
+          description: Imported VM
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VMInventoryEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        default:
+          $ref: "#/components/responses/Error"
+  /v1/vms/{id}:
+    parameters:
+      - $ref: "#/components/parameters/VMID"
+    get:
+      summary: Inspect a virtual machine
+      operationId: inspectVM
+      responses:
+        "200":
+          description: VM and runtime state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VMEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        default:
+          $ref: "#/components/responses/Error"
+  /v1/vms/{id}/clone:
+    parameters:
+      - $ref: "#/components/parameters/VMID"
+    post:
+      summary: Clone a stopped virtual machine
+      operationId: cloneVM
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CloneVMRequest"
+      responses:
+        "200":
+          description: Clone report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CloneEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        default:
+          $ref: "#/components/responses/Error"
+  /v1/vms/{id}/start:
+    parameters:
+      - $ref: "#/components/parameters/VMID"
+    post:
+      summary: Start a virtual machine
+      operationId: startVM
+      responses:
+        "202":
+          description: VM start accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RuntimeEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        default:
+          $ref: "#/components/responses/Error"
+  /v1/vms/{id}/stop:
+    parameters:
+      - $ref: "#/components/parameters/VMID"
+    post:
+      summary: Stop a virtual machine
+      operationId: stopVM
+      parameters:
+        - name: force
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "202":
+          description: VM stop accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RuntimeEnvelope"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        default:
+          $ref: "#/components/responses/Error"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    VMID:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: "^[0-9a-f]{16}$"
+  responses:
+    Error:
+      description: Request failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+  schemas:
+    HealthEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/Health"
+    HostEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/HostReport"
+    HostPreferenceEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/HostPreference"
+    MetalProfilesEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/MetalProfile"
+    MetalProbeEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/MetalProbeComparison"
+    VMListEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/VM"
+    VMEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/VM"
+    VMInventoryEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/VMInventory"
+    RuntimeEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/RuntimeStatus"
+    CloneEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/CloneReport"
+    ErrorEnvelope:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [message]
+          properties:
+            message:
+              type: string
+    Health:
+      type: object
+      required: [service, version, status]
+      properties:
+        service:
+          type: string
+        version:
+          type: string
+        status:
+          type: string
+          const: ok
+    HostReport:
+      type: object
+      required:
+        - architecture
+        - chip
+        - osVersion
+        - osBuild
+        - logicalCPUCount
+        - physicalMemoryBytes
+        - virtualizationSupported
+        - virtualizationEntitlementPresent
+        - maximumVMCPUCount
+        - minimumVMMemoryBytes
+        - maximumVMMemoryBytes
+        - unrestrictedGraphicsPreference
+        - preferenceBackupPending
+      properties:
+        architecture:
+          type: string
+        chip:
+          type: string
+        osVersion:
+          type: string
+        osBuild:
+          type: string
+        logicalCPUCount:
+          type: integer
+        physicalMemoryBytes:
+          type: integer
+        virtualizationSupported:
+          type: boolean
+        virtualizationEntitlementPresent:
+          type: boolean
+        maximumVMCPUCount:
+          type: integer
+        minimumVMMemoryBytes:
+          type: integer
+        maximumVMMemoryBytes:
+          type: integer
+        metal:
+          oneOf:
+            - $ref: "#/components/schemas/MetalDevice"
+            - type: "null"
+        unrestrictedGraphicsPreference:
+          $ref: "#/components/schemas/HostPreference"
+        preferenceBackupPending:
+          type: boolean
+    MetalDevice:
+      type: object
+      required:
+        - name
+        - registryID
+        - maxThreadgroupMemoryBytes
+        - recommendedWorkingSetBytes
+        - supportedAppleFamilies
+      properties:
+        name:
+          type: string
+        registryID:
+          type: integer
+        maxThreadgroupMemoryBytes:
+          type: integer
+        recommendedWorkingSetBytes:
+          type: integer
+        supportedAppleFamilies:
+          type: array
+          items:
+            type: integer
+    HostPreference:
+      type: object
+      required: [isSet]
+      properties:
+        isSet:
+          type: boolean
+        enabled:
+          type: [boolean, "null"]
+        rawValue:
+          type: [string, "null"]
+    MetalProfile:
+      type: object
+      required:
+        - id
+        - summary
+        - maturity
+        - validatedHostChips
+        - validatedHostVersions
+        - validatedGuestVersions
+        - validatedWorkloads
+      properties:
+        id:
+          type: string
+        summary:
+          type: string
+        maturity:
+          type: string
+          enum: [stock, research, certified]
+        appleFamilyMaximum:
+          type: [integer, "null"]
+        maxThreadgroupMemoryBytes:
+          type: [integer, "null"]
+        recommendedWorkingSetBytes:
+          type: [integer, "null"]
+        validatedHostChips:
+          type: array
+          items:
+            type: string
+        validatedHostVersions:
+          type: array
+          items:
+            type: string
+        validatedGuestVersions:
+          type: array
+          items:
+            type: string
+        validatedWorkloads:
+          type: array
+          items:
+            type: string
+        evidenceURL:
+          type: [string, "null"]
+          format: uri
+    MetalProbeRequest:
+      type: object
+      properties:
+        profile:
+          type: string
+          default: cua-m1-llamacpp
+    MetalHostEnableRequest:
+      type: object
+      required: [acknowledgePrivateAPIRisk]
+      properties:
+        acknowledgePrivateAPIRisk:
+          type: boolean
+          const: true
+    MetalProbeComparison:
+      type: object
+      required: [profileID, stock, profiled]
+      properties:
+        profileID:
+          type: string
+        stock:
+          $ref: "#/components/schemas/MetalProbeResult"
+        profiled:
+          $ref: "#/components/schemas/MetalProbeResult"
+    MetalProbeResult:
+      type: object
+      required:
+        - device
+        - family
+        - supportsFamily
+        - maxThreadgroupMemoryBytes
+        - recommendedWorkingSetBytes
+        - supportsMetal3
+      properties:
+        device:
+          type: string
+        family:
+          type: integer
+        supportsFamily:
+          type: boolean
+        maxThreadgroupMemoryBytes:
+          type: integer
+        recommendedWorkingSetBytes:
+          type: integer
+        supportsMetal3:
+          type: boolean
+    VM:
+      type: object
+      required: [vm, runtime]
+      properties:
+        vm:
+          $ref: "#/components/schemas/VMInventory"
+        runtime:
+          $ref: "#/components/schemas/RuntimeStatus"
+    VMInventory:
+      type: object
+      required:
+        - id
+        - name
+        - manifestPath
+        - cpuCount
+        - memoryBytes
+        - metalProfileID
+        - isValid
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        manifestPath:
+          type: string
+        cpuCount:
+          type: integer
+        memoryBytes:
+          type: integer
+        metalProfileID:
+          type: string
+        isValid:
+          type: boolean
+        validationError:
+          type: [string, "null"]
+    RuntimeStatus:
+      type: object
+      required: [vmID, phase]
+      properties:
+        vmID:
+          type: string
+        phase:
+          type: string
+          enum: [stopped, starting, running, stopping, failed]
+        error:
+          type: [string, "null"]
+    RegisterVMRequest:
+      type: object
+      required: [manifestPath]
+      properties:
+        manifestPath:
+          type: string
+    ImportLumeRequest:
+      type: object
+      required: [directory]
+      properties:
+        directory:
+          type: string
+        profile:
+          type: string
+    CloneVMRequest:
+      type: object
+      required: [destination]
+      properties:
+        destination:
+          type: string
+        name:
+          type: string
+        allowFullCopy:
+          type: boolean
+          default: false
+    CloneReport:
+      type: object
+      required:
+        - sourceManifestPath
+        - destinationManifestPath
+        - usedCopyOnWrite
+        - logicalDiskBytes
+        - elapsedSeconds
+      properties:
+        sourceManifestPath:
+          type: string
+        destinationManifestPath:
+          type: string
+        usedCopyOnWrite:
+          type: boolean
+        logicalDiskBytes:
+          type: integer
+        elapsedSeconds:
+          type: number

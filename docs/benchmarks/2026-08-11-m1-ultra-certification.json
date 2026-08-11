@@ -1,0 +1,138 @@
+{
+  "arguments" : [
+    "-m",
+    "/Users/lume/lunchpail-bench/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+    "-p",
+    "512",
+    "-n",
+    "128",
+    "-r",
+    "3",
+    "-t",
+    "8",
+    "-ngl",
+    "-1",
+    "-o",
+    "json"
+  ],
+  "artifacts" : [
+    {
+      "byteCount" : 33464,
+      "path" : "/Users/lume/lunchpail-bench/llama-b10359/llama-bench",
+      "role" : "llama-bench",
+      "sha256" : "8a0ea51a40658436b4ec34a3f3ada1085f5feaa1d049e87ee7205f725a689f69"
+    },
+    {
+      "byteCount" : 668788096,
+      "path" : "/Users/lume/lunchpail-bench/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+      "role" : "model",
+      "sha256" : "9fecc3b3cd76bba89d504f29b616eedf7da85b96540e490ca5824d3f7d2776a0"
+    },
+    {
+      "byteCount" : 51760,
+      "path" : "/Users/lume/lunchpail-bench/lunchpail-metal-probe",
+      "role" : "metal-probe",
+      "sha256" : "12b834592fe627d74dd74be18a4319eef1d1268c7f556a27e831051d80897190"
+    },
+    {
+      "byteCount" : 53000,
+      "path" : "/Users/lume/lunchpail-bench/libLunchpailMetalShim.dylib",
+      "role" : "metal-shim",
+      "sha256" : "c490587f89ba700272528df059fd37e07e57dc68d34a918d98489111231b7cae"
+    }
+  ],
+  "capabilityProbe" : {
+    "profileID" : "cua-m1-llamacpp",
+    "profiled" : {
+      "device" : "Apple Paravirtual device",
+      "family" : 1009,
+      "maxThreadgroupMemoryBytes" : 65536,
+      "recommendedWorkingSetBytes" : 51539607552,
+      "supportsFamily" : true,
+      "supportsMetal3" : false
+    },
+    "stock" : {
+      "device" : "Apple Paravirtual device",
+      "family" : 1009,
+      "maxThreadgroupMemoryBytes" : 32768,
+      "recommendedWorkingSetBytes" : 51539607552,
+      "supportsFamily" : false,
+      "supportsMetal3" : false
+    }
+  },
+  "generationSpeedup" : 18.155740780623525,
+  "minimumGenerationSpeedup" : 1.1,
+  "minimumPromptSpeedup" : 1.1,
+  "passed" : true,
+  "profileID" : "cua-m1-llamacpp",
+  "profiled" : {
+    "backends" : "MTL,BLAS",
+    "buildCommit" : "84f712946",
+    "buildNumber" : 10359,
+    "cpuInfo" : "Accelerate, Apple M1 Ultra (Virtual)",
+    "generation" : {
+      "averageTokensPerSecond" : 167.169655,
+      "samplesTokensPerSecond" : [
+        184.047,
+        153.257,
+        164.205
+      ],
+      "standardDeviationTokensPerSecond" : 15.607455,
+      "tokenCount" : 128
+    },
+    "gpuInfo" : "Apple Paravirtual device",
+    "modelFilename" : "/Users/lume/lunchpail-bench/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+    "modelType" : "llama 1B Q4_K - Medium",
+    "prompt" : {
+      "averageTokensPerSecond" : 5112.158622,
+      "samplesTokensPerSecond" : [
+        5089.14,
+        5126.87,
+        5120.47
+      ],
+      "standardDeviationTokensPerSecond" : 20.18935,
+      "tokenCount" : 512
+    }
+  },
+  "promptSpeedup" : 12.36824195986152,
+  "recordedAt" : "2026-08-11T22:27:32Z",
+  "schemaVersion" : 1,
+  "stock" : {
+    "backends" : "MTL,BLAS",
+    "buildCommit" : "84f712946",
+    "buildNumber" : 10359,
+    "cpuInfo" : "Accelerate, Apple M1 Ultra (Virtual)",
+    "generation" : {
+      "averageTokensPerSecond" : 9.207537,
+      "samplesTokensPerSecond" : [
+        9.35377,
+        8.56591,
+        9.70294
+      ],
+      "standardDeviationTokensPerSecond" : 0.582449,
+      "tokenCount" : 128
+    },
+    "gpuInfo" : "Apple Paravirtual device",
+    "modelFilename" : "/Users/lume/lunchpail-bench/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+    "modelType" : "llama 1B Q4_K - Medium",
+    "prompt" : {
+      "averageTokensPerSecond" : 413.329448,
+      "samplesTokensPerSecond" : [
+        411.931,
+        417.057,
+        411
+      ],
+      "standardDeviationTokensPerSecond" : 3.261862,
+      "tokenCount" : 512
+    }
+  },
+  "system" : {
+    "architecture" : "arm64",
+    "buildVersion" : "25F84",
+    "chip" : "Apple M1 Ultra (Virtual)",
+    "productVersion" : "26.5.2"
+  },
+  "validationFailures" : [
+
+  ]
+}

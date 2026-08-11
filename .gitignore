@@ -1,0 +1,11 @@
+.build/
+.codex/
+.DS_Store
+*.xcuserstate
+*.ipsw
+*.asif
+*.img
+*.pyc
+DerivedData/
+__pycache__/
+dist/
